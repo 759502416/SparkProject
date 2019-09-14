@@ -47,6 +47,7 @@
       <artifactId>spark-sql_2.11</artifactId>
       <version>2.3.1</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-streaming -->
     <!-- SparkSQL  ON  Hive-->
     <dependency>
       <groupId>org.apache.spark</groupId>
@@ -123,6 +124,23 @@
     <sourceDirectory>src/main/scala</sourceDirectory>
     <testSourceDirectory>src/test/scala</testSourceDirectory>
     <plugins>
+
+      <!-- 在maven项目中既有java又有scala代码时配置 maven-scala-plugin 插件打包时可以将两类代码一起打包
+      <plugin>
+        <groupId>org.scala-tools</groupId>
+        <artifactId>maven-scala-plugin</artifactId>
+        <version>2.15.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>-->
+
+      <!-- maven 打jar包需要插件 -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>2.4</version>
@@ -134,7 +152,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>com.bjsxt.scalaspark.sql.windows.OverFunctionOnHive</mainClass>
+              <mainClass>kafkaT.UserConsumer</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -148,52 +166,47 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.scala-tools</groupId>
-        <artifactId>maven-scala-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-              <goal>testCompile</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <scalaVersion>${scala.version}</scalaVersion>
-          <args>
-            <arg>-target:jvm-1.5</arg>
-          </args>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-eclipse-plugin</artifactId>
-        <configuration>
-          <downloadSources>true</downloadSources>
-          <buildcommands>
-            <buildcommand>ch.epfl.lamp.sdt.core.scalabuilder</buildcommand>
-          </buildcommands>
-          <additionalProjectnatures>
-            <projectnature>ch.epfl.lamp.sdt.core.scalanature</projectnature>
-          </additionalProjectnatures>
-          <classpathContainers>
-            <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
-            <classpathContainer>ch.epfl.lamp.sdt.launching.SCALA_CONTAINER</classpathContainer>
-          </classpathContainers>
-        </configuration>
-      </plugin>
+
+
+      <!-- 以上assembly可以将依赖的包打入到一个jar包中，下面这种方式是使用maven原生的方式打jar包，不将依赖的包打入到最终的jar包中 -->
+      <!--<plugin>-->
+      <!--<groupId>org.apache.maven.plugins</groupId>-->
+      <!--<artifactId>maven-jar-plugin</artifactId>-->
+      <!--<version>2.4</version>-->
+      <!--<configuration>-->
+      <!--<archive>-->
+      <!--<manifest>-->
+      <!--<addClasspath>true</addClasspath>-->
+      <!--&lt;!&ndash; 指定当前主类运行时找依赖的jar包时 所有依赖的jar包存放路径的前缀 &ndash;&gt;-->
+      <!--<classpathPrefix>/alljars/lib</classpathPrefix>-->
+      <!--<mainClass>com.bjsxt.javaspark.sql.CreateDataSetFromHive</mainClass>-->
+      <!--</manifest>-->
+      <!--</archive>-->
+      <!--</configuration>-->
+      <!--</plugin>-->
+
+
+      <!-- 拷贝依赖的jar包到lib目录 -->
+      <!--<plugin>-->
+      <!--<groupId>org.apache.maven.plugins</groupId>-->
+      <!--<artifactId>maven-dependency-plugin</artifactId>-->
+      <!--<executions>-->
+      <!--<execution>-->
+      <!--<id>copy</id>-->
+      <!--<phase>package</phase>-->
+      <!--<goals>-->
+      <!--<goal>copy-dependencies</goal>-->
+      <!--</goals>-->
+      <!--<configuration>-->
+      <!--<outputDirectory>-->
+      <!--&lt;!&ndash; 将依赖的jar 包复制到target/lib下&ndash;&gt;-->
+      <!--${project.build.directory}/lib-->
+      <!--</outputDirectory>-->
+      <!--</configuration>-->
+      <!--</execution>-->
+      <!--</executions>-->
+      <!--</plugin>-->
+
     </plugins>
   </build>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.scala-tools</groupId>
-        <artifactId>maven-scala-plugin</artifactId>
-        <configuration>
-          <scalaVersion>${scala.version}</scalaVersion>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
 </project>
