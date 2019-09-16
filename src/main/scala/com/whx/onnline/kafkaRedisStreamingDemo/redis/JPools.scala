@@ -11,7 +11,7 @@ object JPools {
 
   private val config: GenericObjectPoolConfig = new GenericObjectPoolConfig
   // 最大的空闲连接数 连接池中最大的空闲连接数默认8
-  config.setMaxIdle(5)
+  config.setMaxIdle(8)
   // 支持最大的连接数  默认为8
   config.setMaxTotal(2000)
 

@@ -22,7 +22,7 @@ object JedisOffset {
     for(partitionOffset <- topicPartitionOffset){
       // 将key进行切割，获得topic Name  和 topic partition
       val strings: Array[String] = partitionOffset._1.split("--")
-      // 将topic的每个分区的偏移量保存到partitionToLong对象中去
+      // 将topic的每个分区的偏移量保存到partitionToLong对象中去    topicName,topic对应的分区编号-->对应分区的偏移量
       partitionToLong +=(new TopicPartition(strings(0),strings(1).toInt) -> partitionOffset._2.toLong)
     }
     partitionToLong

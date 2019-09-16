@@ -23,11 +23,11 @@ object GenerateWord {
     properties.put("value.serializer","org.apache.kafka.common.serialization.StringSerializer")
     properties.put("acks","all")
     //kafkaProducerRetries
-    properties.put("retries",3)
-    properties.put("batch.size",16384)
+    properties.put("retries","3")
+    properties.put("batch.size","16384")
     // 配置如有不理解，请见官方网站http://kafka.apache.org/0110/documentation.html#config
-    properties.put("linger.ms",1)
-    properties.put("buffer.memory", 33554432)
+    properties.put("linger.ms","1")
+    properties.put("buffer.memory", "33554432")
 
     // 创建一个生产者的客户端实例
     // 由于时间问题，后续会更新更复杂的demo，现此处模拟循环获取数据,后续会替换
@@ -39,9 +39,8 @@ object GenerateWord {
         Thread.sleep(500);
         val key: String = UUID.randomUUID().toString
         val value: Int = new Random().nextInt(26) + 97
-        // 指定分区数为2
-        val record: ProducerRecord[String, String] = new ProducerRecord[String, String]("wordCount",
-          2, new Date().getTime, key, value.toString)
+        // 可指定分区数，也可以不指定，这里我不指定
+        val record: ProducerRecord[String, String] = new ProducerRecord[String, String]("wordCount1", key, value.toString)
         producer.send(record)
         count+=1;
       }
